@@ -53,7 +53,7 @@ class _MyList extends State<List> {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: "/new"),
-                  builder: (BuildContext context) => InputFormWidget()
+                  builder: (BuildContext context) => InputFormWidget(null)
               ),
             );
           }
@@ -77,7 +77,17 @@ class _MyList extends State<List> {
                   children: <Widget>[
                     FlatButton(
                         child: const Text("編集"),
-                        onPressed: () => print("編集ボタンを押しました")
+                        onPressed: () {
+                          print("編集ボタンを押しました");
+                          //編集ボタンの処理追加
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                settings: const RouteSettings(name: "/edit"),
+                                builder: (BuildContext context) => InputFormWidget(document)
+                            ),
+                          );
+                        }
                     ),
                   ],
                 )

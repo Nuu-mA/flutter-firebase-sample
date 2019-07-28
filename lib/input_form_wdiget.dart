@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class InputFormWidget extends StatefulWidget {
+  InputFormWidget(this.document); // コンストラクタ
+  final DocumentSnapshot document;
+
   @override
   State<StatefulWidget> createState() => MyInputFormState();
 }
@@ -19,6 +22,7 @@ class _FormData {
 class MyInputFormState extends State<InputFormWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _FormData _data = _FormData();
+  DocumentReference _mainReference;
 
   void _setLendOrRent(String value) {
     setState(() {
@@ -35,11 +39,25 @@ class MyInputFormState extends State<InputFormWidget> {
         lastDate: DateTime(_data.date.year + 2));
   }
 
+
+  @override
+  void initState() {
+    _mainReference = Firestore.instance.collection('memo-sample').document();
+    //引数で渡した編集対象のデータがなければ新規作成なので、データの読み込みを行わない
+    if (widget.document != null) {
+      if(_data.user == null && _data.stuff == null) {
+        _data.borrowOrLend = widget.document['borrowOrLend'];
+        _data.user = widget.document['user'];
+        _data.stuff = widget.document['stuff'];
+        _data.date = widget.document['date'].toDate();
+      }
+      _mainReference = Firestore.instance.collection('memo-sample').
+      document(widget.document.documentID);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    DocumentReference _mainReference;
-    _mainReference = Firestore.instance.collection('memo-sample').document();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('貸し借り入力'),

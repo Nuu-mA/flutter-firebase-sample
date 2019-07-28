@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'input_form_wdiget.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -42,6 +44,19 @@ class _MyList extends State<List> {
               );
             }
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            print("新規作成ボタンを押しました");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: "/new"),
+                  builder: (BuildContext context) => InputFormWidget()
+              ),
+            );
+          }
       ),
     );
   }

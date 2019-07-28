@@ -23,6 +23,7 @@ class MyInputFormState extends State<InputFormWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _FormData _data = _FormData();
   DocumentReference _mainReference;
+  bool deleteFlg = false;
 
   void _setLendOrRent(String value) {
     setState(() {
@@ -39,20 +40,22 @@ class MyInputFormState extends State<InputFormWidget> {
         lastDate: DateTime(_data.date.year + 2));
   }
 
-
   @override
   void initState() {
     _mainReference = Firestore.instance.collection('memo-sample').document();
     //引数で渡した編集対象のデータがなければ新規作成なので、データの読み込みを行わない
     if (widget.document != null) {
-      if(_data.user == null && _data.stuff == null) {
+      if (_data.user == null && _data.stuff == null) {
         _data.borrowOrLend = widget.document['borrowOrLend'];
         _data.user = widget.document['user'];
         _data.stuff = widget.document['stuff'];
         _data.date = widget.document['date'].toDate();
       }
-      _mainReference = Firestore.instance.collection('memo-sample').
-      document(widget.document.documentID);
+      _mainReference = Firestore.instance
+          .collection('memo-sample')
+          .document(widget.document.documentID);
+      // 編集画面なので削除ボタン活性化フラグを立てる
+      deleteFlg = true;
     }
   }
 
@@ -63,23 +66,33 @@ class MyInputFormState extends State<InputFormWidget> {
         title: const Text('貸し借り入力'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () {
-                // FireBaseに保存する
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                  _mainReference.setData({
+            icon: Icon(Icons.save),
+            onPressed: () {
+              // FireBaseに保存する
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                _mainReference.setData(
+                  {
                     'borrowOrLend': _data.borrowOrLend,
                     'user': _data.user,
                     'stuff': _data.stuff,
                     'date': _data.date
-                  });
-                  Navigator.pop(context);
-                }
-              }),
+                  },
+                );
+                Navigator.pop(context);
+              }
+            },
+          ),
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () {},
+            // 削除ボタンフラグをみる
+            onPressed: !deleteFlg
+                ? null
+                : () {
+                    // フラグが立っているなら編集対象を削除して画面を閉じる
+                    _mainReference.delete();
+                    Navigator.pop(context);
+                  },
           ),
         ],
       ),

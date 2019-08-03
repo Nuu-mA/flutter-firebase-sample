@@ -25,7 +25,14 @@ void _getUser(BuildContext context) async {
       await _auth.signInAnonymously();
       firebaseUser = await _auth.currentUser();
     }
-    Navigator.pushReplacementNamed(context, "/list");
+    Navigator.pushReplacementNamed(
+      context,
+      "/list",
+      arguments: {
+        "firebaseUser": firebaseUser,
+        "auth": _auth,
+      },
+    );
   } catch (e) {
     Fluttertoast.showToast(msg: "Firebaseとの接続に失敗しました。");
   }

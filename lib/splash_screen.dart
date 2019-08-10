@@ -34,6 +34,7 @@ void _getUser(BuildContext context) async {
       },
     );
   } catch (e) {
+    print("FirebaseAuth : $e");
     Fluttertoast.showToast(msg: "Firebaseとの接続に失敗しました。");
   }
 }

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class InputFormWidget extends StatefulWidget {
-  InputFormWidget(this.document); // コンストラクタ
+  InputFormWidget(this.document, this.firebaseUser); // コンストラクタ
   final DocumentSnapshot document;
+  final FirebaseUser firebaseUser;
 
   @override
   State<StatefulWidget> createState() => MyInputFormState();
@@ -22,9 +24,6 @@ class _FormData {
 class MyInputFormState extends State<InputFormWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _FormData _data = _FormData();
-  DocumentReference _mainReference;
-  bool deleteFlg = false;
-
   void _setLendOrRent(String value) {
     setState(() {
       _data.borrowOrLend = value;
@@ -41,10 +40,17 @@ class MyInputFormState extends State<InputFormWidget> {
   }
 
   @override
-  void initState() {
-    _mainReference = Firestore.instance.collection('memo-sample').document();
+  Widget build(BuildContext context) {
+    DocumentReference _mainReference;
+    _mainReference = Firestore.instance
+        .collection('users')
+        .document(widget.firebaseUser.uid)
+        .collection("transaction") // テーブル名
+        .document();
     //引数で渡した編集対象のデータがなければ新規作成なので、データの読み込みを行わない
+    bool deleteFlg = false;
     if (widget.document != null) {
+      //引数で渡したデータがあるかどうか
       if (_data.user == null && _data.stuff == null) {
         _data.borrowOrLend = widget.document['borrowOrLend'];
         _data.user = widget.document['user'];
@@ -52,15 +58,14 @@ class MyInputFormState extends State<InputFormWidget> {
         _data.date = widget.document['date'].toDate();
       }
       _mainReference = Firestore.instance
-          .collection('memo-sample')
+          .collection('users')
+          .document(widget.firebaseUser.uid)
+          .collection("transaction") // テーブル名
           .document(widget.document.documentID);
       // 編集画面なので削除ボタン活性化フラグを立てる
       deleteFlg = true;
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('貸し借り入力'),

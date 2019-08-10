@@ -50,7 +50,12 @@ class _MyList extends State<List> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('memo-sample').snapshots(),
+          // ログインしたユーザーIDからドキュメントを取得しにいく
+          stream: Firestore.instance
+              .collection('users')
+              .document(_firebaseUser.uid)
+              .collection("transaction")
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) return const Text('Loading...');
@@ -58,8 +63,8 @@ class _MyList extends State<List> {
               // 'documents'がレコード単位のデータかも
               itemCount: snapshot.data.documents.length,
               padding: const EdgeInsets.only(top: 10.0),
-              itemBuilder: (context, index) =>
-                  _buildListItem(context, snapshot.data.documents[index]),
+              itemBuilder: (context, index) => _buildListItem(
+                  context, snapshot.data.documents[index], _firebaseUser),
             );
           },
         ),
@@ -71,8 +76,10 @@ class _MyList extends State<List> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                settings: const RouteSettings(name: "/new"),
-                builder: (BuildContext context) => InputFormWidget(null)),
+              settings: const RouteSettings(name: "/new"),
+              builder: (BuildContext context) =>
+                  InputFormWidget(null, _firebaseUser),
+            ),
           );
         },
       ),
@@ -208,7 +215,8 @@ class _MyList extends State<List> {
   }
 
   /// リストアイテムWidget(一個一個のリスト単位のWidget)
-  Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
+  Widget _buildListItem(BuildContext context, DocumentSnapshot document,
+      FirebaseUser firebaseUser) {
     return Card(
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         ListTile(
@@ -233,9 +241,10 @@ class _MyList extends State<List> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        settings: const RouteSettings(name: "/edit"),
-                        builder: (BuildContext context) =>
-                            InputFormWidget(document)),
+                      settings: const RouteSettings(name: "/edit"),
+                      builder: (BuildContext context) =>
+                          InputFormWidget(document, firebaseUser),
+                    ),
                   );
                 }),
           ],

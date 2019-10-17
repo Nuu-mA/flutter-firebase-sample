@@ -23,8 +23,9 @@ class SplashScreen extends StatelessWidget {
 /// Facebook認証を実行する
 void initiateFacebookLogin(BuildContext context) async {
   var facebookLogin = FacebookLogin();
+  var permissions = ["email"];
   var facebookLoginResult =
-      await facebookLogin.logInWithReadPermissions(['email']);
+      await facebookLogin.logIn(permissions);
   switch (facebookLoginResult.status) {
     case FacebookLoginStatus.error:
       print("Error");

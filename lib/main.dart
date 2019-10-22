@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_firebase_sample/splash_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'input_form_wdiget.dart';
@@ -181,6 +182,7 @@ class _MyList extends State<List> {
               child: const Text('ログアウト'),
               onPressed: () {
                 _auth.signOut();
+                FacebookLogin().logOut();
                 Navigator.pushNamedAndRemoveUntil(
                     context, "/splash_screen", (_) => false);
               },

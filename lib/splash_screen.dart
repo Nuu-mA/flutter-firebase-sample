@@ -29,7 +29,12 @@ void initiateFacebookLogin(BuildContext context) async {
   switch (facebookLoginResult.status) {
     case FacebookLoginStatus.error:
       print("Error");
-      Fluttertoast.showToast(msg: "Facebookでのログインに失敗しました。");
+      if (facebookLoginResult.errorMessage == "User logged in as different Facebook user.") {
+        facebookLogin.logOut();
+        Fluttertoast.showToast(msg: "ログインに失敗しました。もう一度お試しください。");
+      } else {
+        Fluttertoast.showToast(msg: "Facebookでのログインに失敗しました。");
+      }
       break;
     case FacebookLoginStatus.cancelledByUser:
       print("CancelledByUser");

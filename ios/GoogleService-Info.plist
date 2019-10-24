@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1063095435982-uokl7hnqbs9lcsu7ds1aspu0h91sn8ts.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1063095435982-uokl7hnqbs9lcsu7ds1aspu0h91sn8ts</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCCXQH5qhmCwihtN9fq27fq7i8mqDM61_w</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1063095435982</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flutterFirebaseSample</string>
+	<key>PROJECT_ID</key>
+	<string>memo-sample-64b21</string>
+	<key>STORAGE_BUCKET</key>
+	<string>memo-sample-64b21.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1063095435982:ios:ba8be38a093e9643</string>
+	<key>DATABASE_URL</key>
+	<string>https://memo-sample-64b21.firebaseio.com</string>
+</dict>
+</plist>

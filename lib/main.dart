@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'かしかりメモ',
+      title: 'Sample',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -37,7 +37,7 @@ class _MyList extends State<List> {
     final FirebaseAuth _auth = args["auth"];
     return Scaffold(
       appBar: AppBar(
-        title: const Text("リスト画面"),
+        title: const Text("チャットリスト"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
@@ -170,7 +170,7 @@ class _MyList extends State<List> {
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: const Text("確認ダイアログ"),
-          content: Text(firebaseUser.email + " でログインしています。"),
+          content: Text(firebaseUser.displayName + " でログインしています。"),
           actions: <Widget>[
             FlatButton(
               child: const Text('キャンセル'),
@@ -220,38 +220,45 @@ class _MyList extends State<List> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot document,
       FirebaseUser firebaseUser) {
     return Card(
-      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        ListTile(
-          leading: const Icon(Icons.android),
-          title: Text("【 " +
-              (document['borrowOrLend'] == "lend" ? "貸" : "借") +
-              " 】" +
-              document['stuff']),
-          subtitle: Text('期限 ： ' +
-              document['date'].toDate().toString().substring(0, 10) +
-              "\n相手 ： " +
-              document['user']),
-        ),
-        ButtonTheme.bar(
-            child: ButtonBar(
-          children: <Widget>[
-            FlatButton(
-                child: const Text("編集"),
-                onPressed: () {
-                  print("編集ボタンを押しました");
-                  //編集ボタンの処理追加
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      settings: const RouteSettings(name: "/edit"),
-                      builder: (BuildContext context) =>
-                          InputFormWidget(document, firebaseUser),
-                    ),
-                  );
-                }),
-          ],
-        )),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              document['comment'],
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 28.0),
+              child: Text(
+                document['user_name'],
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: FlatButton(
+              child: const Text("編集",style: TextStyle(color: Colors.blueAccent),),
+              onPressed: () {
+                //編集ボタンの処理追加
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    settings: const RouteSettings(name: "/edit"),
+                    builder: (BuildContext context) =>
+                        InputFormWidget(document, firebaseUser),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
